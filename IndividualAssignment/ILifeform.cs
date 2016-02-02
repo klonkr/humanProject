@@ -21,6 +21,7 @@ namespace IndividualAssignment
         double Weight { get; set; }
         int Age { get; }
 
+
         DateTime Birthdate { get; set; }
         State State { get; set; }
 
