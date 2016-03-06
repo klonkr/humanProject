@@ -11,8 +11,8 @@ namespace IndividualAssignment
         string Name { get; set; }
         Human Owner { get; set; }
 
-        void Feed();
-        void TakeToTheFarm();
+        //void Feed();
+        //void TakeToTheFarm();
         
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace IndividualAssignment
 {
@@ -10,6 +12,9 @@ namespace IndividualAssignment
 
     public abstract class Mammal : ILifeform
     {
+        [Required]
+        public int MammalID { get; set; }
+
         public static Random rnd = new Random();
         public Reproduction Reproduction { get; set; }
         public double Height { get; set; }
@@ -18,7 +23,6 @@ namespace IndividualAssignment
         public Sex Sex { get; set; }
         public int Age => GetAge();
 
-        public List<Mammal> Children { get; set; }
         public State State { get; set; }
 
         protected Mammal()
@@ -26,7 +30,7 @@ namespace IndividualAssignment
             Height = 0;
             Weight = 0;
 
-            Birthdate = DateTime.Now;
+            //Birthdate = DateTime.Now;
             Sex = (Sex)rnd.Next(0, 2);
             State = State.Healthy;
             Reproduction = Reproduction.Sexual;

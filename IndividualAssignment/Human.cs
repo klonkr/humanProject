@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.SqlTypes;
 using System.Linq;
 
@@ -7,12 +8,14 @@ namespace IndividualAssignment
 {
     public class Human : Mammal
     {
+        [Key]
+        public int Id { get; set; }
         private Human _partner;
         private string _firstName;
         private string _lastName;
 
         #region Properties
-        public static int NumberOfPeopleAlive { get; set; }
+        public static int NumberOfPeopleAlive { get; private set; }
 
         public string FirstName
         {
@@ -28,13 +31,14 @@ namespace IndividualAssignment
         public Human Mother { get; set; }
         public Human Father { get; set; }
         public List<Human> Parents { get; set; } 
-        public new List<Human> Children { get; set; }
+        public ICollection<Human> Children { get; set; }
 
         public Human Partner
         {
             get { return _partner; }
             set { MarryAnotherAdult(value); }
         }
+
 
         public List<Human> Friends { get; set; }
         #endregion
@@ -53,17 +57,18 @@ namespace IndividualAssignment
             Father = father;
             Mother = mother;
             Children = new List<Human>();
+            Parents = new List<Human>();
         }
 
         private string CheckNameContainsCorrectCharactersElseNull(string nameToCheck)
         {
             string compare = nameToCheck.ToLower();
-            if ((from character in compare let validCharacters = "abcdefghijklmonpqrstuvwxyzåäö" where !validCharacters.Contains(character) select character).Any())
-            {
-                Console.WriteLine("error.");
-                return null;
-            }
-            return nameToCheck;
+            if (!(from character in compare
+                let validCharacters = "abcdefghijklmonpqrstuvwxyzåäö"
+                where !validCharacters.Contains(character)
+                select character).Any()) return nameToCheck;
+            Console.WriteLine("error.");
+            return null;
         }
 
         protected Human(string firstName, string lastName, Human mother, Human father) : this(mother, father)
@@ -80,8 +85,8 @@ namespace IndividualAssignment
             {
                 baby = this.Sex == Sex.Female ? new Human(this, partner) : new Human(partner, this);
             }
-            Children.Add(baby);
-            partner.Children.Add(baby);
+            //Children.Add(baby);
+            //partner.Children.Add(baby);
 
             return baby;
         }
@@ -190,15 +195,15 @@ namespace IndividualAssignment
             return false;
         }
 
-        //public bool CheckIfFamilyTiesAreOkForMarriage(Human partner)
-        //{
-        //    if (!(this.Mother == Partner.Mother && this.Father == partner.Father))
-        //    {
-        //        if (!(this.Mother == partner || this.Father == partner))
-        //            return true;
-        //    }
-        //    return false;
-        //}
+        public bool CheckIfFamilyTiesAreOkForMarriage(Human partner)
+        {
+            if (!(this.Mother == Partner.Mother && this.Father == partner.Father))
+            {
+                if (!(this.Mother == partner || this.Father == partner))
+                    return true;
+            }
+            return false;
+        }
 
         public bool CheckIfConsious()
         {
